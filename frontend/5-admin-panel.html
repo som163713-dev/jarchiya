@@ -1,0 +1,567 @@
+<!doctype html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>پنل مدیرکل | جارچیا</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;600;700;800;900&family=Unbounded:wght@400;600;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#0A0A16; --panel:rgba(255,255,255,.045); --panel-2:rgba(255,255,255,.075);
+  --line:rgba(255,255,255,.09); --ink:#F3F1FB; --muted:#9795B3;
+  --v:#8B7CFF; --p:#FF7CC0; --m:#6FF0C7; --gold:#F5C56B; --danger:#FF6B81;
+  --serif:'Vazirmatn',sans-serif; --display:'Unbounded',sans-serif; --mono:'JetBrains Mono',monospace;
+}
+body[data-mode="light"]{
+  --bg:#F4F3FA; --panel:#FFFFFF; --panel-2:#FBFAFF; --line:#E7E5F3; --ink:#1B1B29; --muted:#6B6C82;
+}
+*{box-sizing:border-box; margin:0; padding:0;}
+body{background:var(--bg); color:var(--ink); font-family:var(--serif); min-height:100vh;}
+button,input,select{font-family:var(--serif); color:var(--ink);}
+button{cursor:pointer;}
+.layout{display:grid; grid-template-columns:230px 1fr; min-height:100vh;}
+@media (max-width:900px){.layout{grid-template-columns:1fr;}}
+
+/* ---------- سایدبار ---------- */
+.side{background:var(--panel); border-inline-end:1px solid var(--line); padding:20px 16px; display:flex; flex-direction:column; gap:4px; min-height:100vh;}
+.wordmark{font-family:var(--display); font-weight:800; font-size:16px; display:flex; align-items:center; gap:8px; margin-bottom:22px; padding:0 6px;}
+.wordmark .dot{width:8px; height:8px; border-radius:50%; background:linear-gradient(135deg,var(--v),var(--p));}
+.wordmark small{font-family:var(--mono); font-size:9px; color:var(--danger); background:rgba(255,107,129,.15); padding:2px 7px; border-radius:20px; margin-inline-start:auto;}
+.nav-item{
+  display:flex; align-items:center; gap:10px; padding:10px 12px; border-radius:10px; font-size:13.5px; color:var(--muted);
+  cursor:pointer; transition:background .15s, color .15s;
+}
+.nav-item.active,.nav-item:hover{background:var(--panel-2); color:var(--ink);}
+.nav-item .ic{width:18px; text-align:center;}
+
+/* ---------- محتوا ---------- */
+.main{padding:26px 32px; overflow-y:auto;}
+.page{display:none;}
+.page.active{display:block;}
+.page-head{display:flex; justify-content:space-between; align-items:flex-end; margin-bottom:26px; flex-wrap:wrap; gap:14px;}
+.page-head h1{font-size:22px;}
+.page-head p{color:var(--muted); font-size:13.5px; margin-top:4px;}
+.btn{border:none; border-radius:10px; padding:10px 18px; font-weight:700; font-size:13px;}
+.btn-primary{background:linear-gradient(135deg,var(--v),var(--p)); color:#fff;}
+.btn-ghost{background:var(--panel-2); border:1px solid var(--line); color:var(--ink);}
+.btn-sm{padding:6px 12px; font-size:12px; border-radius:8px;}
+
+/* KPI */
+.kpi-row{display:grid; grid-template-columns:repeat(4,1fr); gap:14px; margin-bottom:26px;}
+@media (max-width:900px){.kpi-row{grid-template-columns:repeat(2,1fr);}}
+.kpi{background:var(--panel); border:1px solid var(--line); border-radius:14px; padding:16px;}
+.kpi b{font-family:var(--mono); font-size:21px; display:block;}
+.kpi span{font-size:12px; color:var(--muted);}
+
+/* جدول کاربران */
+.card{background:var(--panel); border:1px solid var(--line); border-radius:16px; padding:20px; margin-bottom:22px;}
+.card-head{display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;}
+.card-head h3{font-size:15px;}
+table{width:100%; border-collapse:collapse; font-size:13px;}
+th{text-align:right; color:var(--muted); font-weight:500; font-size:11.5px; font-family:var(--mono); padding:8px 10px; border-bottom:1px solid var(--line);}
+td{padding:11px 10px; border-bottom:1px solid var(--line);}
+tr:last-child td{border-bottom:none;}
+.u-name{display:flex; align-items:center; gap:9px;}
+.u-avatar{width:30px; height:30px; border-radius:50%; background:linear-gradient(135deg,var(--v),var(--p)); display:flex; align-items:center; justify-content:center; font-size:12px; font-weight:700; flex-shrink:0;}
+.pill{font-family:var(--mono); font-size:10.5px; padding:3px 10px; border-radius:20px;}
+.pill.free{background:rgba(151,149,179,.18); color:var(--muted);}
+.pill.pro{background:rgba(139,124,255,.16); color:var(--v);}
+.pill.ent{background:rgba(245,197,107,.16); color:var(--gold);}
+.pill.active{background:rgba(111,240,199,.14); color:var(--m);}
+.pill.suspended{background:rgba(255,107,129,.14); color:var(--danger);}
+.row-actions{display:flex; gap:6px;}
+
+/* تبلیغات */
+.ad-grid{display:grid; grid-template-columns:1fr 1fr; gap:16px;}
+@media (max-width:860px){.ad-grid{grid-template-columns:1fr;}}
+.field{margin-bottom:14px;}
+.field label{display:block; font-size:12px; color:var(--muted); font-family:var(--mono); margin-bottom:7px;}
+.field input,.field select,.field textarea{width:100%; background:var(--panel-2); border:1px solid var(--line); border-radius:9px; padding:10px 12px; font-size:13px;}
+.tier-list{display:flex; gap:8px; flex-wrap:wrap;}
+.tier-chip{padding:7px 14px; border-radius:20px; border:1.5px solid var(--line); font-size:12.5px; cursor:pointer;}
+.tier-chip.on{border-color:var(--v); background:rgba(139,124,255,.14); color:var(--v);}
+.ad-preview{border:1.5px dashed var(--line); border-radius:14px; padding:18px; text-align:center; color:var(--muted); font-size:12.5px;}
+.ad-preview .banner{height:70px; border-radius:12px; background:linear-gradient(135deg,var(--v),var(--p)); margin-bottom:10px; display:flex; align-items:center; justify-content:center; font-family:var(--mono); font-size:11px; color:#fff;}
+
+/* پلن‌ها/ویژگی‌ها */
+.plan-matrix{display:grid; grid-template-columns:repeat(3,1fr); gap:16px;}
+@media (max-width:860px){.plan-matrix{grid-template-columns:1fr;}}
+.plan-col{border:1px solid var(--line); border-radius:16px; padding:18px;}
+.plan-col h4{font-size:15px; margin-bottom:12px;}
+.feat-toggle{display:flex; justify-content:space-between; align-items:center; padding:8px 0; border-bottom:1px solid var(--line); font-size:12.5px;}
+.feat-toggle:last-child{border-bottom:none;}
+.switch{width:34px; height:20px; border-radius:20px; background:var(--line); position:relative; flex-shrink:0;}
+.switch::after{content:""; position:absolute; top:2px; right:2px; width:16px; height:16px; border-radius:50%; background:#fff; transition:transform .2s;}
+.switch.on{background:linear-gradient(135deg,var(--v),var(--p));}
+.switch.on::after{transform:translateX(-14px);}
+
+/* گزارش */
+.chart{display:flex; align-items:flex-end; gap:6px; height:130px;}
+.chart .bar{flex:1; border-radius:5px 5px 0 0; background:linear-gradient(180deg,var(--v),var(--p)); opacity:.9;}
+
+/* ویرایشگر زنده‌ی قالب سامانه */
+.theme-editor-grid{display:grid; grid-template-columns:1fr 1fr; gap:16px; align-items:stretch;}
+@media (max-width:960px){.theme-editor-grid{grid-template-columns:1fr;}}
+#themeCode{
+  width:100%; height:420px; border:none; resize:vertical; padding:16px;
+  background:#08080F; color:#CFCCEB; font-family:var(--mono); font-size:12px; line-height:1.7;
+  direction:ltr; text-align:left; outline:none;
+}
+#themePreview{width:100%; height:420px; border:none; background:#fff;}
+</style>
+</head>
+<body data-mode="dark">
+
+<div class="layout">
+  <aside class="side">
+    <div class="wordmark"><span class="dot"></span>جارچیا<small>ADMIN</small></div>
+    <div class="nav-item active" data-p="overview"><span class="ic">◈</span>نمای کلی</div>
+    <div class="nav-item" data-p="users"><span class="ic">👤</span>کاربران</div>
+    <div class="nav-item" data-p="plans"><span class="ic">💎</span>پلن‌ها و امکانات</div>
+    <div class="nav-item" data-p="ads"><span class="ic">📢</span>مدیریت تبلیغات</div>
+    <div class="nav-item" data-p="theme"><span class="ic">🎛️</span>قالب صفحات سامانه</div>
+    <div class="nav-item" data-p="brand"><span class="ic">🏷️</span>تنظیمات سامانه</div>
+    <div class="nav-item" data-p="reports"><span class="ic">📊</span>گزارش‌های مالی</div>
+    <div style="flex:1;"></div>
+    <div class="field" style="margin:0 6px;">
+      <label style="font-size:10px;">آدرس بک‌اند</label>
+      <input type="text" id="adminApiBase" value="https://jarchiya-backend.onrender.com" style="font-size:11px; padding:7px 9px;" />
+    </div>
+    <div class="mode-toggle" style="display:flex; gap:4px; background:var(--panel-2); border:1px solid var(--line); border-radius:20px; padding:4px; margin:0 6px;">
+      <button class="mode-btn" data-mode="light" style="flex:1; padding:6px; border:none; background:transparent; border-radius:16px; font-size:12px; color:var(--muted); cursor:pointer;">☀️ روشن</button>
+      <button class="mode-btn active" data-mode="dark" style="flex:1; padding:6px; border:none; background:linear-gradient(135deg,var(--v),var(--p)); border-radius:16px; font-size:12px; color:#fff; cursor:pointer;">🌙 تیره</button>
+    </div>
+    <div id="adminConnStatus" style="font-family:var(--mono); font-size:10.5px; color:var(--muted); padding:0 6px;">⏳ در حال اتصال...</div>
+    <button class="btn btn-ghost btn-sm" id="adminLoginBtn" style="margin:6px;">ورود مدیر</button>
+  </aside>
+
+  <main class="main">
+
+    <!-- نمای کلی -->
+    <div class="page active" id="p-overview">
+      <div class="page-head"><div><h1>نمای کلی سامانه</h1><p>وضعیت لحظه‌ای کل پلتفرم جارچیا</p></div></div>
+      <div class="kpi-row">
+        <div class="kpi"><b id="kOvUsers">۲,۴۸۰</b><span>کاربر فعال</span></div>
+        <div class="kpi"><b id="kOvProjects">۱,۹۲۰</b><span>برنامک منتشرشده</span></div>
+        <div class="kpi"><b id="kOvRevenue">۴۶۸م</b><span>درآمد این ماه (تومان)</span></div>
+        <div class="kpi"><b id="kOvPaid">—</b><span>پرداخت‌های موفق</span></div>
+      </div>
+      <div class="card">
+        <div class="card-head"><h3>رشد کاربران ثبت‌نامی — ۱۰ روز اخیر</h3></div>
+        <div class="chart" id="ovChart"></div>
+      </div>
+    </div>
+
+    <!-- کاربران -->
+    <div class="page" id="p-users">
+      <div class="page-head"><div><h1>مدیریت کاربران</h1><p>کنترل کامل روی حساب، پلن، و امکانات هر کاربر</p></div>
+        <button class="btn btn-primary">+ افزودن کاربر</button></div>
+      <div class="card">
+        <table>
+          <thead><tr><th>کاربر</th><th>پلن</th><th>وضعیت</th><th>برنامک‌ها</th><th>عملیات</th></tr></thead>
+          <tbody id="usersBody"></tbody>
+        </table>
+        <p id="usersEmptyNote" style="font-size:12px; color:var(--muted); margin-top:10px; display:none;">داده‌های نمونه نمایش داده می‌شوند — برای دیدن کاربران واقعی، پایین سایدبار «ورود مدیر» را بزنید.</p>
+      </div>
+    </div>
+
+    <!-- پلن‌ها -->
+    <div class="page" id="p-plans">
+      <div class="page-head"><div><h1>پلن‌ها و امکانات</h1><p>هر امکان را برای هر پلن، جدا روشن یا خاموش کن</p></div></div>
+      <div class="plan-matrix" id="planMatrix"></div>
+    </div>
+
+    <!-- تبلیغات -->
+    <div class="page" id="p-ads">
+      <div class="page-head"><div><h1>مدیریت تبلیغات سراسری</h1><p>یک بنر را در همه یا چند سطح از برنامک‌ها منتشر کن</p></div></div>
+      <div class="ad-grid">
+        <div class="card">
+          <div class="field"><label>عنوان کمپین تبلیغاتی</label><input type="text" value="کمپین معرفی پلن سازمانی" /></div>
+          <div class="field"><label>نوع محتوا</label>
+            <select><option>بنر تصویری</option><option>ویدیوی کوتاه</option><option>متنی + لینک</option></select>
+          </div>
+          <div class="field"><label>نمایش برای کدام پلن‌ها</label>
+            <div class="tier-list">
+              <div class="tier-chip on">رایگان</div><div class="tier-chip">حرفه‌ای</div><div class="tier-chip">سازمانی</div>
+            </div>
+          </div>
+          <div class="field"><label>فرکانس نمایش</label><select><option>هر بار بازدید</option><option>یک‌بار در روز</option><option>یک‌بار در هفته</option></select></div>
+          <button class="btn btn-primary" style="width:100%;">انتشار در همه‌ی برنامک‌های مجاز</button>
+        </div>
+        <div class="card">
+          <div class="card-head"><h3>پیش‌نمایش بنر</h3></div>
+          <div class="ad-preview"><div class="banner">تبلیغ شما اینجا نمایش داده می‌شود</div>یک نمونه از نمایش بنر داخل برنامک کاربر</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ویرایشگر زنده‌ی قالب سامانه -->
+    <div class="page" id="p-theme">
+      <div class="page-head">
+        <div><h1>ویرایشگر زنده‌ی قالب صفحات سامانه</h1><p>کد HTML هر صفحه‌ی سامانه (نه برنامک کاربران) را مستقیم اینجا تغییر بده و همان لحظه نتیجه را ببین</p></div>
+        <div style="display:flex; gap:10px;">
+          <button class="btn btn-ghost" id="btnResetTheme">بازگردانی به پیش‌فرض</button>
+          <button class="btn btn-primary" id="btnPublishTheme">انتشار برای همه‌ی کاربران</button>
+        </div>
+      </div>
+
+      <div class="field" style="max-width:320px;">
+        <label>کدام صفحه‌ی سامانه ویرایش شود</label>
+        <select id="themePageSelect">
+          <option value="landing">سایت اصلی (لندینگ جارچیا)</option>
+          <option value="dashboard">هدر داشبورد کاربر</option>
+          <option value="pricing">هدر صفحه‌ی قیمت‌گذاری</option>
+        </select>
+      </div>
+
+      <div class="theme-editor-grid">
+        <div class="card" style="padding:0; overflow:hidden;">
+          <div class="card-head" style="padding:14px 16px; margin:0; border-bottom:1px solid var(--line);">
+            <h3 style="font-family:var(--mono); font-size:12.5px;">ویرایشگر کد HTML/CSS</h3>
+            <span id="themeStatus" style="font-family:var(--mono); font-size:11px; color:var(--m);">همگام</span>
+          </div>
+          <textarea id="themeCode" spellcheck="false"></textarea>
+        </div>
+        <div class="card" style="padding:0; overflow:hidden;">
+          <div class="card-head" style="padding:14px 16px; margin:0; border-bottom:1px solid var(--line);">
+            <h3 style="font-family:var(--mono); font-size:12.5px;">پیش‌نمایش زنده</h3>
+          </div>
+          <iframe id="themePreview" title="پیش‌نمایش زنده‌ی قالب"></iframe>
+        </div>
+      </div>
+      <p style="font-size:12px; color:var(--muted); margin-top:14px; line-height:1.8;">
+        دکمه‌ی «انتشار برای همه‌ی کاربران» در نسخه‌ی نهایی (پس از اتصال به سرور)، همین کد را مستقیماً جایگزین نسخه‌ی زنده‌ی سایت می‌کند. هر تغییری این‌جا، فقط روی همین صفحه و به‌صورت آزمایشی اعمال می‌شود.
+      </p>
+    </div>
+
+    <!-- تنظیمات سامانه -->
+    <div class="page" id="p-brand">
+      <div class="page-head"><div><h1>تنظیمات سامانه</h1><p>نام، شعار و رنگ برند کل پلتفرم رو از همین‌جا تغییر بده</p></div></div>
+
+      <div class="ad-grid">
+        <div class="card">
+          <div class="field"><label>نام کسب‌وکار / برند سامانه</label><input type="text" id="brandName" value="جارچیا" /></div>
+          <div class="field"><label>شعار کوتاه زیر نام (اختیاری)</label><input type="text" id="brandTagline" value="دنیایی برای رشد کسب‌وکار تو" /></div>
+          <div class="field"><label>نام لاتین (برای وردمارک انگلیسی)</label><input type="text" id="brandLatin" value="Jarchiya" /></div>
+          <div class="field">
+            <label>رنگ اصلی برند</label>
+            <div class="tier-list" id="brandColorPicker">
+              <div class="tier-chip on" data-c="#8B7CFF" style="border-color:#8B7CFF;">بنفش</div>
+              <div class="tier-chip" data-c="#2FE6C6" style="border-color:#2FE6C6;">فیروزه‌ای</div>
+              <div class="tier-chip" data-c="#FF9457" style="border-color:#FF9457;">نارنجی</div>
+              <div class="tier-chip" data-c="#F2C94C" style="border-color:#F2C94C;">طلایی</div>
+            </div>
+          </div>
+          <button class="btn btn-primary" id="btnSaveBrand" style="width:100%; margin-top:6px;">ذخیره و اعمال در همه‌ی صفحات</button>
+          <p style="font-size:11.5px; color:var(--muted); margin-top:12px; line-height:1.8;">
+            بعد از اتصال به بک‌اند، همین تنظیم از طریق API روی لندینگ، داشبورد، استودیو و صفحه‌ی قیمت‌گذاری هم به‌طور خودکار اعمال می‌شود. الان فقط پیش‌نمایش زنده‌ی کنارش را می‌بینی.
+          </p>
+        </div>
+        <div class="card">
+          <div class="card-head"><h3>پیش‌نمایش زنده‌ی نوار بالای سایت</h3></div>
+          <div style="border:1px solid var(--line); border-radius:14px; padding:16px; background:#08080F; display:flex; align-items:center; gap:9px;">
+            <span id="pvDot" style="width:9px; height:9px; border-radius:50%; background:#8B7CFF; flex-shrink:0;"></span>
+            <div>
+              <b id="pvLatin" style="font-family:var(--display); font-size:15px; display:block;">Jarchiya</b>
+              <span id="pvTagline" style="font-size:11px; color:var(--muted);">دنیایی برای رشد کسب‌وکار تو</span>
+            </div>
+          </div>
+          <div style="margin-top:16px; border:1px solid var(--line); border-radius:14px; padding:16px; background:#08080F;">
+            <span style="font-size:12px; color:var(--muted);">نام فارسی در سایدبار و منوها:</span>
+            <b id="pvName" style="display:block; margin-top:6px; font-size:14px;">جارچیا</b>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- گزارش‌ها -->
+    <div class="page" id="p-reports">
+      <div class="page-head"><div><h1>گزارش‌های مالی</h1><p>درآمد بر اساس پلن‌ها، در ۶ ماه اخیر</p></div></div>
+      <div class="card"><div class="chart" id="revChart"></div></div>
+    </div>
+
+  </main>
+</div>
+
+<script>
+document.querySelectorAll('.nav-item').forEach(item=>{
+  item.addEventListener('click', ()=>{
+    document.querySelectorAll('.nav-item').forEach(x=>x.classList.remove('active'));
+    item.classList.add('active');
+    document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+    document.getElementById('p-'+item.dataset.p).classList.add('active');
+  });
+});
+
+/* نمودارها */
+function bars(container, vals){
+  const el = document.getElementById(container);
+  vals.forEach(v=>{ const b=document.createElement('div'); b.className='bar'; b.style.height=v+'%'; el.appendChild(b); });
+}
+bars('ovChart',[30,45,40,55,60,50,68,72,80,90]);
+bars('revChart',[40,55,48,70,62,85]);
+
+/* کاربران نمونه (fallback وقتی به بک‌اند وصل نیستیم) */
+const DEMO_USERS=[
+  {n:'آرمان رضایی', plan:'pro', status:'active', apps:3},
+  {n:'سارا احمدی', plan:'free', status:'active', apps:1},
+  {n:'محسن کریمی', plan:'ent', status:'active', apps:8},
+  {n:'نیلوفر صادقی', plan:'pro', status:'suspended', apps:2},
+  {n:'حسین مرادی', plan:'free', status:'active', apps:1},
+];
+const planLbl={free:'رایگان',pro:'حرفه‌ای',ent:'سازمانی',enterprise:'سازمانی'};
+const tbody=document.getElementById('usersBody');
+
+function renderUsersTable(list, isReal){
+  tbody.innerHTML = '';
+  list.forEach(u=>{
+    const uid = u.id ?? null;
+    const plan = u.plan || 'free';
+    const status = u.status || 'active';
+    const apps = u.project_count ?? u.apps ?? 0;
+    const tr=document.createElement('tr');
+    tr.innerHTML=`<td><div class="u-name"><span class="u-avatar">${(u.n||u.name)[0]}</span>${u.n||u.name}</div></td>
+      <td><span class="pill ${plan}">${planLbl[plan]||plan}</span></td>
+      <td><span class="pill ${status}">${status==='active'?'فعال':'معلق'}</span></td>
+      <td>${apps}</td>
+      <td class="row-actions">
+        <button class="btn btn-ghost btn-sm" data-act="gift" data-id="${uid}" data-name="${u.n||u.name}">هدیه</button>
+        <button class="btn btn-ghost btn-sm" data-act="toggle" data-id="${uid}" data-status="${status}">${status==='active'?'تعلیق':'فعال‌سازی'}</button>
+      </td>`;
+    tbody.appendChild(tr);
+  });
+  document.getElementById('usersEmptyNote').style.display = isReal ? 'none' : 'block';
+}
+renderUsersTable(DEMO_USERS, false);
+
+tbody.addEventListener('click', async (e)=>{
+  const btn = e.target.closest('button'); if(!btn) return;
+  const id = btn.dataset.id;
+  if(!id || id==='null'){ alert('این یک ردیف نمونه است — برای عملیات واقعی، ابتدا «ورود مدیر» را بزن.'); return; }
+  if(btn.dataset.act==='gift'){
+    const plan = prompt('پلن هدیه برای «'+btn.dataset.name+'» (free / pro / enterprise):', 'pro');
+    if(!plan) return;
+    try{ await adminApiPost('/api/admin/users/'+id+'/plan', {plan}); alert('پلن به‌روزرسانی شد 🎁'); loadAdminData(); }
+    catch(err){ alert(err.message); }
+  }
+  if(btn.dataset.act==='toggle'){
+    const next = btn.dataset.status==='active' ? 'suspended' : 'active';
+    try{ await adminApiPost('/api/admin/users/'+id+'/status', {status: next}); loadAdminData(); }
+    catch(err){ alert(err.message); }
+  }
+});
+
+/* ماتریس پلن/امکانات */
+const PLANS=[
+  {name:'رایگان', feats:[['برنامک فعال (۱ عدد)',true],['گزارش پایه',true],['کمپین قرعه‌کشی',false],['حذف تبلیغات',false],['پشتیبانی اختصاصی',false]]},
+  {name:'حرفه‌ای', feats:[['برنامک فعال (۳ عدد)',true],['گزارش پیشرفته',true],['کمپین نامحدود',true],['حذف تبلیغات',true],['پشتیبانی اختصاصی',false]]},
+  {name:'سازمانی', feats:[['برنامک نامحدود',true],['گزارش پیشرفته + API',true],['کمپین نامحدود',true],['حذف تبلیغات',true],['پشتیبانی اختصاصی',true]]},
+];
+const matrix=document.getElementById('planMatrix');
+PLANS.forEach(p=>{
+  const col=document.createElement('div'); col.className='plan-col';
+  col.innerHTML = `<h4>${p.name}</h4>` + p.feats.map(([label,on])=>`
+    <div class="feat-toggle"><span>${label}</span><div class="switch ${on?'on':''}"></div></div>`).join('');
+  matrix.appendChild(col);
+});
+matrix.addEventListener('click', e=>{
+  if(e.target.classList.contains('switch')) e.target.classList.toggle('on');
+});
+document.querySelectorAll('.tier-chip').forEach(c=> c.addEventListener('click', ()=> c.classList.toggle('on')));
+
+/* ============== ویرایشگر زنده‌ی قالب صفحات سامانه ============== */
+const THEME_DEFAULTS = {
+  landing: `<!doctype html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8" />
+<style>
+  body{ margin:0; font-family:Tahoma,sans-serif; background:#0A0A16; color:#F3F1FB; }
+  header{ padding:60px 24px; text-align:center; background:radial-gradient(circle at 50% 0%, rgba(139,124,255,.25), transparent 60%); }
+  h1{ font-size:30px; margin:0 0 14px; }
+  p{ color:#9795B3; max-width:420px; margin:0 auto 22px; font-size:14px; }
+  .btn{ display:inline-block; padding:12px 24px; border-radius:12px; background:linear-gradient(135deg,#8B7CFF,#FF7CC0); color:#fff; font-weight:bold; text-decoration:none; font-size:14px; }
+</style>
+</head>
+<body>
+  <header>
+    <h1>با جارچیا، کسب‌وکارت رشد می‌کند</h1>
+    <p>این هدر نمونه‌ای از قالب سایت اصلی است — متن، رنگ، و ساختار را همین‌جا تغییر بده.</p>
+    <a class="btn" href="/login">شروع رایگان</a>
+  </header>
+</body>
+</html>`,
+  dashboard: `<!doctype html>
+<html lang="fa" dir="rtl">
+<head><meta charset="UTF-8" />
+<style>
+  body{ margin:0; font-family:Tahoma,sans-serif; background:#0B0B14; color:#F2F1FA; }
+  .topbar{ display:flex; align-items:center; justify-content:space-between; padding:16px 22px; background:rgba(255,255,255,.05); border-bottom:1px solid rgba(255,255,255,.1); }
+  .logo{ font-weight:bold; font-size:15px; }
+  .badge{ font-size:11px; padding:6px 12px; border-radius:20px; background:rgba(124,92,255,.18); color:#8B7CFF; }
+</style>
+</head>
+<body>
+  <div class="topbar"><div class="logo">برنامک‌ساز</div><div class="badge">پلن حرفه‌ای</div></div>
+</body>
+</html>`,
+  pricing: `<!doctype html>
+<html lang="fa" dir="rtl">
+<head><meta charset="UTF-8" />
+<style>
+  body{ margin:0; font-family:Tahoma,sans-serif; background:#0A0A16; color:#F3F1FB; text-align:center; padding:50px 20px; }
+  h1{ font-size:24px; }
+  p{ color:#9795B3; font-size:13px; }
+</style>
+</head>
+<body>
+  <h1>پلنی که با رشدت هم‌قدم می‌شود</h1>
+  <p>شروع رایگان، بدون نیاز به کارت بانکی.</p>
+</body>
+</html>`
+};
+
+const themeSelect = document.getElementById('themePageSelect');
+const themeCode = document.getElementById('themeCode');
+const themePreview = document.getElementById('themePreview');
+const themeStatus = document.getElementById('themeStatus');
+let themeDebounce;
+
+function loadThemePage(key){
+  themeCode.value = THEME_DEFAULTS[key];
+  updatePreview();
+}
+function updatePreview(){
+  themePreview.srcdoc = themeCode.value;
+  themeStatus.textContent = 'همگام';
+  themeStatus.style.color = 'var(--m)';
+}
+themeSelect.addEventListener('change', e=> loadThemePage(e.target.value));
+themeCode.addEventListener('input', ()=>{
+  themeStatus.textContent = 'در حال تایپ...';
+  themeStatus.style.color = 'var(--gold)';
+  clearTimeout(themeDebounce);
+  themeDebounce = setTimeout(updatePreview, 500);
+});
+document.getElementById('btnResetTheme').addEventListener('click', ()=> loadThemePage(themeSelect.value));
+document.getElementById('btnPublishTheme').addEventListener('click', ()=>{
+  alert('در نسخه‌ی متصل به سرور، این کد جایگزین نسخه‌ی زنده‌ی «' + themeSelect.options[themeSelect.selectedIndex].text + '» برای همه‌ی کاربران می‌شود.\\nدر این نسخه‌ی نمایشی، فقط در پیش‌نمایش ذخیره شد.');
+});
+loadThemePage('landing');
+
+/* ============== تنظیمات سامانه (نام برند) ============== */
+const brandName = document.getElementById('brandName');
+const brandTagline = document.getElementById('brandTagline');
+const brandLatin = document.getElementById('brandLatin');
+const pvDot = document.getElementById('pvDot');
+const pvLatin = document.getElementById('pvLatin');
+const pvTagline = document.getElementById('pvTagline');
+const pvName = document.getElementById('pvName');
+
+function refreshBrandPreview(){
+  pvLatin.textContent = brandLatin.value || 'Jarchiya';
+  pvTagline.textContent = brandTagline.value || '';
+  pvName.textContent = brandName.value || 'جارچیا';
+  // نام سایدبار پنل مدیر را هم زنده به‌روزرسانی می‌کنیم
+  document.querySelectorAll('.wordmark').forEach(w=>{
+    const textNode = Array.from(w.childNodes).find(n=>n.nodeType===3 && n.textContent.trim().length>0);
+    if(textNode) textNode.textContent = brandName.value || 'جارچیا';
+  });
+}
+[brandName, brandTagline, brandLatin].forEach(el=> el.addEventListener('input', refreshBrandPreview));
+
+document.getElementById('brandColorPicker').querySelectorAll('.tier-chip').forEach(chip=>{
+  chip.addEventListener('click', ()=>{
+    document.getElementById('brandColorPicker').querySelectorAll('.tier-chip').forEach(c=>c.classList.remove('on'));
+    chip.classList.add('on');
+    const color = chip.dataset.c;
+    pvDot.style.background = color;
+    document.documentElement.style.setProperty('--v', color);
+  });
+});
+
+document.getElementById('btnSaveBrand').addEventListener('click', ()=>{
+  alert('نام برند به «' + brandName.value + '» تغییر کرد.\\nدر نسخه‌ی متصل به سرور، این تنظیم برای همه‌ی کاربران و روی همه‌ی صفحات سامانه اعمال می‌شود.');
+});
+
+/* ================= اتصال واقعی پنل مدیر به بک‌اند ================= */
+const adminApiBaseInput = document.getElementById('adminApiBase');
+function adminApiBase(){ return adminApiBaseInput.value.replace(/\/$/,''); }
+function getAdminToken(){ return localStorage.getItem('jarchiya_token'); }
+
+async function adminApiGet(path){
+  const res = await fetch(adminApiBase()+path, { headers:{ Authorization:'Bearer '+getAdminToken() } });
+  const data = await res.json();
+  if(!res.ok) throw new Error(data.error||'خطا');
+  return data;
+}
+async function adminApiPost(path, body){
+  const res = await fetch(adminApiBase()+path, {
+    method:'POST', headers:{'Content-Type':'application/json', Authorization:'Bearer '+getAdminToken()},
+    body: JSON.stringify(body)
+  });
+  const data = await res.json();
+  if(!res.ok) throw new Error(data.error||'خطا');
+  return data;
+}
+
+const connStatus = document.getElementById('adminConnStatus');
+const faNum = n => Number(n||0).toLocaleString('fa-IR');
+
+async function loadAdminData(){
+  const token = getAdminToken();
+  if(!token){
+    connStatus.textContent = '○ مهمان — داده‌ی نمونه';
+    connStatus.style.color = 'var(--muted)';
+    return;
+  }
+  try{
+    const overview = await adminApiGet('/api/admin/overview');
+    document.getElementById('kOvUsers').textContent = faNum(overview.totalUsers);
+    document.getElementById('kOvProjects').textContent = faNum(overview.totalProjects);
+    document.getElementById('kOvRevenue').textContent = faNum(overview.revenueToman);
+    document.getElementById('kOvPaid').textContent = faNum(overview.paidCount);
+
+    const { users } = await adminApiGet('/api/admin/users');
+    renderUsersTable(users, true);
+
+    connStatus.textContent = '● متصل به بک‌اند واقعی';
+    connStatus.style.color = 'var(--m)';
+  }catch(err){
+    connStatus.textContent = '⚠ ' + err.message;
+    connStatus.style.color = 'var(--danger)';
+  }
+}
+
+document.getElementById('adminLoginBtn').addEventListener('click', async ()=>{
+  const phone = prompt('شماره موبایل مدیر (باید در ADMIN_PHONES سرور ثبت شده باشد):');
+  if(!phone) return;
+  const password = prompt('رمز عبور:');
+  if(!password) return;
+  try{
+    const res = await fetch(adminApiBase()+'/api/auth/login', {
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({phone, password})
+    });
+    const data = await res.json();
+    if(!res.ok) throw new Error(data.error);
+    if(data.user.role !== 'admin') throw new Error('این حساب نقش مدیر ندارد.');
+    localStorage.setItem('jarchiya_token', data.token);
+    loadAdminData();
+  }catch(err){ alert(err.message); }
+});
+
+loadAdminData();
+
+/* دکمه‌ی تم روشن/تیره */
+document.querySelectorAll('.mode-btn').forEach(b=>{
+  b.addEventListener('click', ()=>{
+    document.querySelectorAll('.mode-btn').forEach(x=>{ x.classList.remove('active'); x.style.background='transparent'; x.style.color='var(--muted)'; });
+    b.classList.add('active'); b.style.background='linear-gradient(135deg,var(--v),var(--p))'; b.style.color='#fff';
+    document.body.setAttribute('data-mode', b.dataset.mode);
+  });
+});
+</script>
+</body>
+</html>
