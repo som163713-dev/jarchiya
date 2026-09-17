@@ -1,0 +1,254 @@
+<!doctype html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>جارچیا | دنیایی که کسب‌وکارت در آن رشد می‌کند</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;600;700;800;900&family=Unbounded:wght@400;600;800;900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+/* ================= هویت برند «جارچیا» =================
+   رنگ: پایه‌ی شب‌رنگ #0A0A16 · بنفش رویایی #8B7CFF · صورتی مرجانی #FF7CC0
+        نعنایی کم‌رنگ #6FF0C7 · طلایی گرم #F5C56B (فقط برای CTA) · متن #F3F1FB
+   تایپ: Unbounded برای وردمارک/اعداد لاتین (هندسی، امروزی، بی‌شباهت به دیفالت‌های AI)
+         Vazirmatn برای تمام متن فارسی · JetBrains Mono برای برچسب‌های داده
+   امضا: میدان گرادیان‌مشی (Mesh Gradient) که با حرکت موس به‌آرامی می‌چرخد —
+        استعاره‌ی «دنیایی رویایی که همراه با حرکت کاربر شکل می‌گیرد»
+================================================================ */
+:root{
+  --bg:#0A0A16; --ink:#F3F1FB; --muted:#9795B3;
+  --v:#8B7CFF; --p:#FF7CC0; --m:#6FF0C7; --gold:#F5C56B;
+  --line:rgba(255,255,255,.09); --glass:rgba(255,255,255,.045);
+  --serif:'Vazirmatn',sans-serif; --display:'Unbounded',sans-serif; --mono:'JetBrains Mono',monospace;
+}
+*{box-sizing:border-box; margin:0; padding:0;}
+html{scroll-behavior:smooth;}
+body{background:var(--bg); color:var(--ink); font-family:var(--serif); overflow-x:hidden; line-height:1.7;}
+::selection{background:var(--v); color:#0A0A16;}
+a{color:inherit; text-decoration:none;}
+.container{max-width:1180px; margin:0 auto; padding:0 28px;}
+.eyebrow{font-family:var(--mono); font-size:12px; letter-spacing:.16em; color:var(--m); display:flex; align-items:center; gap:9px; margin-bottom:16px;}
+.eyebrow::before{content:""; width:24px; height:1px; background:var(--m);}
+.btn{display:inline-flex; align-items:center; gap:8px; padding:14px 26px; border-radius:13px; font-weight:700; font-size:15px; border:1px solid transparent; transition:transform .18s, box-shadow .18s;}
+.btn:active{transform:scale(.97);}
+.btn-gold{background:linear-gradient(120deg,var(--gold),#FFD98A); color:#241B06;}
+.btn-gold:hover{box-shadow:0 12px 32px -8px rgba(245,197,107,.5); transform:translateY(-2px);}
+.btn-ghost{background:var(--glass); border-color:var(--line); color:var(--ink);}
+.btn-ghost:hover{border-color:var(--v);}
+
+/* ---------- میدان گرادیان‌مش (امضا) ---------- */
+.mesh{position:fixed; inset:-10%; z-index:0; pointer-events:none; transition:transform .4s ease-out;}
+.mesh span{position:absolute; border-radius:50%; filter:blur(100px); opacity:.4;}
+.mesh span:nth-child(1){ width:44vw; height:44vw; top:-8%; right:-6%; background:var(--v); }
+.mesh span:nth-child(2){ width:38vw; height:38vw; bottom:-10%; left:0%; background:var(--p); }
+.mesh span:nth-child(3){ width:30vw; height:30vw; top:38%; left:38%; background:var(--m); opacity:.22; }
+@media (prefers-reduced-motion:reduce){ .mesh{transition:none;} }
+
+/* ---------- ناوبری ---------- */
+nav{position:sticky; top:0; z-index:50; backdrop-filter:blur(16px); background:rgba(10,10,22,.7); border-bottom:1px solid var(--line);}
+nav .row{display:flex; align-items:center; justify-content:space-between; padding:18px 28px; max-width:1180px; margin:0 auto;}
+.wordmark{font-family:var(--display); font-weight:800; font-size:19px; letter-spacing:.01em; display:flex; align-items:center; gap:9px;}
+.wordmark .dot{width:9px; height:9px; border-radius:50%; background:linear-gradient(135deg,var(--v),var(--p));}
+.links{display:flex; gap:30px; font-size:14px; color:var(--muted);}
+.links a:hover{color:var(--ink);}
+@media (max-width:800px){.links{display:none;}}
+
+/* ---------- هیرو ---------- */
+.hero{position:relative; z-index:1; padding:110px 0 70px; text-align:center;}
+.hero .eyebrow{justify-content:center;}
+.hero h1{font-size:clamp(34px,5.4vw,64px); font-weight:800; line-height:1.28; max-width:820px; margin:0 auto 22px;}
+.hero h1 span{background:linear-gradient(100deg,var(--v),var(--p) 50%,var(--m)); -webkit-background-clip:text; background-clip:text; color:transparent;}
+.hero p.lead{color:var(--muted); font-size:18px; max-width:540px; margin:0 auto 36px;}
+.hero-cta{display:flex; gap:14px; justify-content:center; flex-wrap:wrap;}
+.brand-name-lat{font-family:var(--display); letter-spacing:.02em;}
+
+/* بج آماری زیر هیرو */
+.trust{display:flex; justify-content:center; gap:40px; margin-top:56px; flex-wrap:wrap;}
+.trust div b{font-family:var(--mono); color:var(--v); font-size:24px; display:block;}
+.trust div span{font-size:12.5px; color:var(--muted);}
+
+/* ---------- بخش‌ها ---------- */
+section{position:relative; z-index:1; padding:90px 0;}
+.section-head{max-width:600px; margin:0 auto 50px; text-align:center;}
+.section-head h2{font-size:clamp(26px,3.2vw,38px); font-weight:800;}
+.section-head p{color:var(--muted); margin-top:14px; font-size:16px;}
+
+/* ---------- گالری استایل زنده (پیشنهاد رنگ خودکار) ---------- */
+.style-picker{display:flex; justify-content:center; gap:12px; margin-bottom:34px; flex-wrap:wrap;}
+.style-chip{
+  display:flex; align-items:center; gap:8px; padding:9px 16px; border-radius:30px;
+  background:var(--glass); border:1.5px solid var(--line); font-size:13px; cursor:pointer; transition:border-color .15s;
+}
+.style-chip .sw{width:16px; height:16px; border-radius:50%;}
+.style-chip.active{border-color:var(--ink);}
+.mock-grid{display:grid; grid-template-columns:repeat(3,1fr); gap:20px;}
+@media (max-width:860px){.mock-grid{grid-template-columns:1fr;}}
+.mock-card{
+  border-radius:20px; padding:24px; border:1px solid var(--line); background:var(--sc-bg,#12121F);
+  transition:background .5s ease, border-color .5s ease; min-height:230px; display:flex; flex-direction:column; justify-content:space-between;
+}
+.mock-card .tag{font-family:var(--mono); font-size:11px; color:var(--muted); margin-bottom:14px; display:block;}
+.mock-card h3{font-size:19px; margin-bottom:8px; background:var(--sc-grad); -webkit-background-clip:text; background-clip:text; color:transparent;}
+.mock-card p{font-size:13px; color:var(--muted);}
+.mock-card .swoop{height:70px; border-radius:14px; background:var(--sc-grad); margin-top:16px; opacity:.9;}
+
+/* ---------- سه ستون قابلیت ---------- */
+.feat-row{display:grid; grid-template-columns:repeat(3,1fr); gap:22px;}
+@media (max-width:900px){.feat-row{grid-template-columns:1fr;}}
+.feat-card{background:var(--glass); border:1px solid var(--line); border-radius:18px; padding:26px;}
+.feat-card .ic{width:44px; height:44px; border-radius:13px; background:linear-gradient(135deg,var(--v),var(--p)); display:flex; align-items:center; justify-content:center; font-size:20px; margin-bottom:16px;}
+.feat-card h3{font-size:17px; margin-bottom:8px;}
+.feat-card p{font-size:14px; color:var(--muted);}
+
+/* ---------- CTA پایانی ---------- */
+.final-cta{
+  text-align:center; border-radius:28px; padding:64px 28px; margin:0 28px;
+  background:linear-gradient(145deg, rgba(139,124,255,.14), rgba(255,124,192,.08));
+  border:1px solid var(--line); max-width:1180px; margin-inline:auto;
+}
+.final-cta h2{font-size:clamp(24px,3.4vw,36px); margin-bottom:14px;}
+.final-cta p{color:var(--muted); margin-bottom:30px;}
+
+footer{position:relative; z-index:1; border-top:1px solid var(--line); padding:36px 0; color:var(--muted); font-size:13px;}
+footer .row{display:flex; justify-content:space-between; flex-wrap:wrap; gap:12px;}
+</style>
+</head>
+<body>
+
+<div class="mesh" id="mesh"><span></span><span></span><span></span></div>
+
+<nav>
+  <div class="row">
+    <div class="wordmark"><span class="dot"></span><span class="brand-name-lat">Jarchiya</span></div>
+    <div class="links">
+      <a href="#gallery">دنیای قالب‌ها</a>
+      <a href="#features">امکانات</a>
+      <a href="#pricing">قیمت‌گذاری</a>
+    </div>
+    <a href="#pricing" class="btn btn-gold" style="padding:10px 20px; font-size:13.5px;">شروع کن</a>
+  </div>
+</nav>
+
+<header class="hero">
+  <div class="container">
+    <div class="eyebrow">دنیای دیجیتال کسب‌وکار تو</div>
+    <h1>با <span class="brand-name-lat">جارچیا</span>، کسب‌وکارت <span>یک دنیای رویایی</span> برای رشد پیدا می‌کند</h1>
+    <p class="lead">از یک کانال یا سایت ساده، یک برنامک زنده در ایتا بساز؛ با ظاهری که هر بار خواستی عوضش کنی، از میان ده‌ها دنیای بصری آماده انتخاب می‌کنی — نه یک فرم خالی.</p>
+    <div class="hero-cta">
+      <a href="#gallery" class="btn btn-gold">ورود به دنیای جارچیا ‹</a>
+      <a href="#features" class="btn btn-ghost">دیدن امکانات</a>
+    </div>
+    <div class="trust">
+      <div><b>+40</b><span>دنیای بصری آماده</span></div>
+      <div><b>12</b><span>دسته‌ی کسب‌وکار</span></div>
+      <div><b>&lt;60s</b><span>تا برنامک آماده</span></div>
+    </div>
+  </div>
+</header>
+
+<section id="gallery">
+  <div class="container">
+    <div class="section-head">
+      <div class="eyebrow" style="justify-content:center;">تغییر ظاهر با یک کلیک</div>
+      <h2>یک دنیای بصری رو انتخاب کن، بقیه رو جارچیا می‌سازه</h2>
+      <p>روی هرکدوم از این استایل‌ها بزن — همه‌ی کارت‌های زیر همون لحظه رنگ و حس‌شون عوض می‌شه.</p>
+    </div>
+    <div class="style-picker" id="stylePicker"></div>
+    <div class="mock-grid" id="mockGrid"></div>
+  </div>
+</section>
+
+<section id="features">
+  <div class="container">
+    <div class="section-head">
+      <div class="eyebrow" style="justify-content:center;">چرا جارچیا</div>
+      <h2>یک پلتفرم، سه دنیای به‌هم‌متصل</h2>
+      <p>ساخت، رشد، و اتوماسیون — هرکدوم جایگاه خودشون رو دارن.</p>
+    </div>
+    <div class="feat-row">
+      <div class="feat-card"><div class="ic">✦</div><h3>استودیوی طراحی ماژولار</h3><p>بلوک‌های آماده رو بچین، رنگ‌بندی رو با یک کلیک عوض کن، و همون لحظه نتیجه رو ببین.</p></div>
+      <div class="feat-card"><div class="ic">◈</div><h3>داشبورد رشد روزانه</h3><p>آمار، کمپین قرعه‌کشی و مسابقه، و اعلان‌های ویژه از طرف مدیر سامانه، هر روز.</p></div>
+      <div class="feat-card"><div class="ic">◆</div><h3>ماژول‌های هوشمند</h3><p>پاسخ‌گویی خودکار، یادآوری سفارش، و رصد سئو — بدون نیاز به دانستن کدنویسی.</p></div>
+    </div>
+  </div>
+</section>
+
+<section id="pricing">
+  <div class="final-cta">
+    <h2>دنیای بصری بعدی کسب‌وکارت رو همین الان انتخاب کن</h2>
+    <p>ثبت‌نام رایگان است؛ ارتقا هر زمان که خواستی.</p>
+    <a href="#" class="btn btn-gold">ساخت اولین برنامک من ‹</a>
+  </div>
+</section>
+
+<footer>
+  <div class="container row">
+    <div class="wordmark" style="font-size:15px;"><span class="dot"></span><span class="brand-name-lat">Jarchiya</span></div>
+    <span>دنیایی برای رشد کسب‌وکار تو در ایتا</span>
+  </div>
+</footer>
+
+<script>
+/* پارالاکس ملایم میدان گرادیان با حرکت موس */
+const mesh = document.getElementById('mesh');
+document.addEventListener('mousemove', e=>{
+  const x = (e.clientX / window.innerWidth - .5) * 26;
+  const y = (e.clientY / window.innerHeight - .5) * 26;
+  mesh.style.transform = `translate(${x}px, ${y}px)`;
+});
+
+/* دنیاهای بصری پیشنهادی */
+const STYLES = [
+  {id:'dream',  name:'رویای بنفش',  sw:'linear-gradient(135deg,#8B7CFF,#FF7CC0)', bg:'#14121F'},
+  {id:'ocean',  name:'اقیانوس نئون', sw:'linear-gradient(135deg,#2FE6C6,#3B7CFF)', bg:'#0D1A1E'},
+  {id:'sunset', name:'غروب مرجانی', sw:'linear-gradient(135deg,#FF9457,#FF4CA0)', bg:'#1E1112'},
+  {id:'forest', name:'جنگل دیجیتال', sw:'linear-gradient(135deg,#3ADC8F,#0FA3B8)', bg:'#0E1C17'},
+  {id:'gold',   name:'طلای کوانتومی', sw:'linear-gradient(135deg,#F2C94C,#C77DFF)', bg:'#1A1712'},
+];
+const picker = document.getElementById('stylePicker');
+STYLES.forEach((s,i)=>{
+  const chip = document.createElement('div');
+  chip.className = 'style-chip' + (i===0?' active':'');
+  chip.innerHTML = `<span class="sw" style="background:${s.sw}"></span>${s.name}`;
+  chip.addEventListener('click', ()=> applyStyle(s, chip));
+  picker.appendChild(chip);
+});
+
+const MOCKS = [
+  {tag:'کانال خبری', title:'خبر لحظه‌ای', desc:'خلاصه‌ی رویدادهای مهم روز، در قالبی زنده'},
+  {tag:'فروشگاه', title:'کلکسیون تازه', desc:'محصولات پرفروش با چیدمانی چشم‌نواز'},
+  {tag:'رزرو نوبت', title:'اولین وقت خالی', desc:'رزرو در سه ثانیه، بدون تماس تلفنی'},
+];
+const grid = document.getElementById('mockGrid');
+MOCKS.forEach(m=>{
+  const c = document.createElement('div'); c.className='mock-card';
+  c.innerHTML = `<span class="tag">${m.tag}</span><h3>${m.title}</h3><p>${m.desc}</p><div class="swoop"></div>`;
+  grid.appendChild(c);
+});
+
+function applyStyle(s, chipEl){
+  document.querySelectorAll('.style-chip').forEach(c=>c.classList.remove('active'));
+  chipEl.classList.add('active');
+  document.querySelectorAll('.mock-card').forEach(c=>{
+    c.style.setProperty('--sc-grad', s.sw);
+    c.style.setProperty('--sc-bg', s.bg);
+  });
+}
+applyStyle(STYLES[0], picker.children[0]);
+
+/* رفع کامل باگ لینک‌های داخلی هدر/دکمه‌ها:
+   به‌جای رفتار پیش‌فرض مرورگر (که در برخی نماگرها باعث نمایش نادرست/تصویر شکسته می‌شود)،
+   اسکرول نرم را خودمان با جاوااسکریپت مدیریت می‌کنیم و از هرگونه ناوبری واقعی جلوگیری می‌کنیم. */
+document.querySelectorAll('a[href^="#"]').forEach(function(link){
+  link.addEventListener('click', function(e){
+    e.preventDefault();
+    var targetId = this.getAttribute('href').slice(1);
+    if(targetId){
+      var target = document.getElementById(targetId);
+      if(target) target.scrollIntoView({behavior:'smooth', block:'start'});
+    }
+  });
+});
+</script>
+</body>
+</html>
