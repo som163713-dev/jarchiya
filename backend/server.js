@@ -11,9 +11,10 @@ const botsRouter = require('./routes/bots');
 const campaignsRouter = require('./routes/campaigns');
 
 const app = express();
-app.use(cors({ origin: true, credentials: false })); // برای تست محلی از روی فایل هم کار می‌کند
+app.use(cors({ origin: true, credentials: false }));
 app.use(express.json());
 
+app.get('/', (req, res) => res.send('Eshete Backend is running'));
 app.get('/api/health', (req, res) => res.json({ ok: true, service: 'eshete-backend' }));
 
 app.use('/api/auth', authRouter);
@@ -29,6 +30,6 @@ app.use((err, req, res, next) => {
 });
 
 const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
+app.listen(PORT, '0.0.0.0', () => {
   console.log(`✔ سرور ایشِته روی پورت ${PORT} اجرا شد → http://localhost:${PORT}/api/health`);
 });
