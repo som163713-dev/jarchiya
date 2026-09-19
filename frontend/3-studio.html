@@ -281,6 +281,77 @@ button{cursor:pointer;}
 }
 @media (min-width:981px){ .studio-mobile-bar{ display:none; } }
 
+
+/* —— پیش‌نمایش کامل چندصفحه‌ای —— */
+.preview-fullscreen{
+  display:none; position:fixed; inset:0; z-index:2000;
+  background:rgba(8,8,14,.92); backdrop-filter:blur(12px);
+  flex-direction:column; align-items:center; justify-content:stretch;
+  padding:12px 16px 20px;
+}
+.preview-fullscreen.open{ display:flex; }
+.preview-bar{
+  width:min(420px,100%); display:flex; align-items:center; gap:8px;
+  margin-bottom:10px; flex-wrap:wrap; justify-content:center;
+}
+.preview-bar .pv-title{ font-size:13px; font-weight:700; color:#F2F1FA; margin-inline-end:auto; }
+.preview-bar button{
+  border:1px solid rgba(255,255,255,.14); background:rgba(255,255,255,.08);
+  color:#F2F1FA; border-radius:10px; padding:8px 12px; font-size:12.5px; font-weight:600;
+}
+.preview-bar button:hover{ border-color:var(--r-a); }
+.preview-bar .pv-page-label{
+  font-size:12px; color:#9092AC; min-width:120px; text-align:center;
+}
+.preview-stage{
+  flex:1; width:min(400px,100%); overflow:auto; border-radius:28px;
+  border:1px solid rgba(255,255,255,.12);
+  background:#0F0F1A;
+  box-shadow:0 24px 60px rgba(0,0,0,.5);
+}
+.preview-stage .pv-page{ padding:0 0 24px; animation:pvIn .25s ease; }
+@keyframes pvIn{ from{opacity:0; transform:translateX(12px)} to{opacity:1; transform:none} }
+.preview-stage .blk{ padding:14px 16px; border-bottom:1px solid rgba(255,255,255,.06); }
+.preview-stage .blk-header{ display:flex; gap:10px; align-items:center; padding:18px 16px 12px; }
+.preview-stage .blk-header .ic{
+  width:34px; height:34px; border-radius:10px;
+  background:linear-gradient(135deg,var(--r-a),var(--r-b));
+  display:flex; align-items:center; justify-content:center; font-size:12px;
+}
+.preview-stage .blk-hero{ text-align:center; padding:28px 18px; }
+.preview-stage .blk-hero h2{
+  font-size:20px; margin-bottom:8px;
+  background:linear-gradient(135deg,var(--r-a),var(--r-b));
+  -webkit-background-clip:text; background-clip:text; color:transparent;
+}
+.preview-stage .blk-hero p{ color:#9092AC; font-size:13px; margin-bottom:12px; }
+.preview-stage .cta{
+  display:inline-block; padding:10px 20px; border-radius:10px; font-weight:700; font-size:13px;
+  background:linear-gradient(135deg,var(--r-a),var(--r-b)); color:#0B0B14;
+}
+.preview-stage .blk-grid{ display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-top:8px; }
+.preview-stage .blk-grid .card{
+  background:rgba(255,255,255,.05); border:1px solid rgba(255,255,255,.08);
+  border-radius:12px; padding:12px; font-size:12px; text-align:center;
+}
+.preview-stage .muted{ color:#9092AC; font-size:12.5px; }
+.preview-stage .blk-footer{ text-align:center; color:#9092AC; font-size:12px; padding:18px; }
+.preview-stage .blk-pricing{ display:flex; gap:8px; margin-top:8px; }
+.preview-stage .plan{
+  flex:1; text-align:center; padding:12px; border-radius:12px;
+  background:rgba(255,255,255,.05); border:1px solid rgba(255,255,255,.1); font-size:12px;
+}
+.preview-stage .plan.hi{ border-color:var(--r-a); }
+.page-nav-float{
+  display:flex; gap:6px; align-items:center; justify-content:center;
+  padding:8px; border-bottom:1px solid var(--border); background:var(--glass);
+}
+.page-nav-float button{
+  border:1px solid var(--border); background:var(--glass-2); color:var(--ink);
+  border-radius:8px; padding:6px 10px; font-size:12px; font-weight:600;
+}
+.page-nav-float .pn-label{ font-size:12px; color:var(--muted); min-width:100px; text-align:center; }
+
 </style>
 </head>
 <body data-theme="violet" data-mode="dark">
@@ -310,7 +381,13 @@ button{cursor:pointer;}
 
   <!-- ===== تب طراحی ===== -->
   <div class="tabpage active" id="page-design" style="display:flex; flex:1; overflow:hidden; padding:0; flex-direction:column;">
-    <div class="page-tabs" id="pageTabs" style="display:flex; gap:6px; padding:10px 16px; background:var(--glass); border-bottom:1px solid var(--border); overflow-x:auto;"></div>
+    <div class="page-tabs" id="pageTabs"></div>
+    <div class="page-nav-float" id="pageNavFloat">
+      <button type="button" id="btnPagePrev" title="صفحه قبل">‹</button>
+      <span class="pn-label" id="pageNavLabel">صفحه</span>
+      <button type="button" id="btnPageNext" title="صفحه بعد">›</button>
+      <button type="button" id="btnFullPreview" style="margin-inline-start:8px;border-color:var(--r-a);color:var(--r-a)">پیش‌نمایش کامل</button>
+    </div>
     <div class="workspace" id="workspaceEl" style="flex:1;">
       <div class="panel left" id="panelLeft">
         <button class="panel-collapse-btn" id="btnCollapseLeft" title="جمع/باز کردن این ستون">‹</button>
@@ -477,6 +554,71 @@ function ensurePage(pid){
 }
 ensurePage('home');
 
+function addCustomPage() {
+  pages[currentPageId].blocks = blocks;
+  const n = Object.keys(pages).length + 1;
+  const pid = 'page-' + Date.now().toString(36);
+  const name = prompt('نام صفحه جدید:', 'صفحه ' + n);
+  if (name === null) return;
+  pages[pid] = {
+    name: (name || ('صفحه ' + n)).trim(),
+    blocks: [
+      { id: freshId(), type: 'header', title: name || 'صفحه جدید', subtitle: '' },
+      { id: freshId(), type: 'hero', title: 'عنوان این صفحه', subtitle: 'توضیح کوتاه', cta: 'اقدام' },
+      { id: freshId(), type: 'footer', title: '© جارچیا' },
+    ]
+  };
+  currentPageId = pid;
+  blocks = pages[pid].blocks;
+  selectedId = blocks[0] ? blocks[0].id : null;
+  renderPageTabs();
+  renderAll();
+}
+function deletePage(pid) {
+  if (Object.keys(pages).length <= 1) { alert('حداقل یک صفحه باید بماند.'); return; }
+  if (!confirm('این صفحه حذف شود؟')) return;
+  delete pages[pid];
+  if (currentPageId === pid) {
+    currentPageId = Object.keys(pages)[0];
+    blocks = pages[currentPageId].blocks;
+    selectedId = blocks[0] ? blocks[0].id : null;
+  }
+  renderPageTabs();
+  renderAll();
+}
+function renderPageTabs() {
+  const el = document.getElementById('pageTabs');
+  if (!el) return;
+  el.innerHTML = '';
+  Object.keys(pages).forEach(pid => {
+    const def = typeof PAGE_DEFS !== 'undefined' ? PAGE_DEFS.find(p => p.id === pid) : null;
+    const label = (pages[pid] && pages[pid].name) || (def ? def.icon + ' ' + def.name : pid);
+    const btn = document.createElement('button');
+    btn.type = 'button';
+    btn.className = 'page-tab' + (pid === currentPageId ? ' active' : '');
+    btn.innerHTML = '<span>' + label + '</span>' + (Object.keys(pages).length > 1 ? '<span class="x" title="حذف">✕</span>' : '');
+    btn.addEventListener('click', (e) => {
+      if (e.target.classList.contains('x')) { e.stopPropagation(); deletePage(pid); return; }
+      pages[currentPageId].blocks = blocks;
+      currentPageId = pid;
+      ensurePage(pid);
+      blocks = pages[pid].blocks;
+      selectedId = blocks[0] ? blocks[0].id : null;
+      renderPageTabs();
+      renderAll();
+    });
+    el.appendChild(btn);
+  });
+  const add = document.createElement('button');
+  add.type = 'button';
+  add.className = 'page-add-btn';
+  add.textContent = '+ صفحه جدید';
+  add.onclick = addCustomPage;
+  el.appendChild(add);
+  try { updatePageNavLabel(); } catch (e) {}
+}
+
+
 /* ============== وضعیت اولیه‌ی بلوک‌ها (صفحه‌ی جاری) ============== */
 let blocks = pages[currentPageId].blocks;
 let nextId = 900, selectedId = blocks[0] ? blocks[0].id : null;
@@ -484,6 +626,7 @@ let nextId = 900, selectedId = blocks[0] ? blocks[0].id : null;
 
 PAGE_DEFS.forEach(p => ensurePage(p.id));
 renderPageTabs();
+loadTemplateFromQuery();
 
 addSel.addEventListener('change', e=>{
   const type = e.target.value; if(!type) return;
@@ -618,7 +761,7 @@ function fieldHTML(key,label,val,isTextarea){
   return `<div class="field"><label>${label}</label>${isTextarea?`<textarea id="f_${key}">${escapeHTML(val)}</textarea>`:`<input id="f_${key}" type="text" value="${escapeHTML(val)}" />`}</div>`;
 }
 
-function renderAll(){ renderBlockList(); renderCanvas(); renderProps(); }
+function renderAll(){ try{updatePageNavLabel();}catch(e){}  renderBlockList(); renderCanvas(); renderProps(); }
 function escapeHTML(s){ return String(s||'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
 
 /* ============== سیستم Undo/Redo واقعی ============== */
@@ -746,6 +889,17 @@ function buildExportHTML(){
 </head>
 <body>
 ${blocksHTML}
+
+<div class="preview-fullscreen" id="previewFullscreen" aria-hidden="true">
+  <div class="preview-bar">
+    <span class="pv-title">پیش‌نمایش کامل</span>
+    <button type="button" id="pvPrev">‹ قبلی</button>
+    <span class="pv-page-label" id="pvPageLabel">—</span>
+    <button type="button" id="pvNext">بعدی ›</button>
+    <button type="button" id="pvClose">بستن ✕</button>
+  </div>
+  <div class="preview-stage" id="previewStage"></div>
+</div>
 </body>
 </html>`;
 }
@@ -851,136 +1005,161 @@ document.querySelectorAll('.mode-btn').forEach(b=>{
   });
 });
 
-/* بارگذاری قالب از API اگر ?template= در آدرس باشد */
+
+/* —— پیش‌نمایش کامل و ورق‌زدن صفحات —— */
+function pageIds() {
+  return Object.keys(pages);
+}
+function currentPageIndex() {
+  return pageIds().indexOf(currentPageId);
+}
+function updatePageNavLabel() {
+  const ids = pageIds();
+  const i = currentPageIndex();
+  const el = document.getElementById('pageNavLabel');
+  if (!el) return;
+  const name = (pages[currentPageId] && pages[currentPageId].name) || currentPageId;
+  el.textContent = (i + 1) + ' / ' + ids.length + ' — ' + name;
+}
+function goPageByOffset(delta) {
+  const ids = pageIds();
+  if (!ids.length) return;
+  pages[currentPageId].blocks = blocks;
+  let i = currentPageIndex() + delta;
+  if (i < 0) i = ids.length - 1;
+  if (i >= ids.length) i = 0;
+  currentPageId = ids[i];
+  ensurePage(currentPageId);
+  blocks = pages[currentPageId].blocks;
+  selectedId = blocks[0] ? blocks[0].id : null;
+  renderPageTabs();
+  renderAll();
+  updatePageNavLabel();
+}
+document.getElementById('btnPagePrev')?.addEventListener('click', () => goPageByOffset(-1));
+document.getElementById('btnPageNext')?.addEventListener('click', () => goPageByOffset(1));
+
+function renderPreviewBlock(b) {
+  const t = (b.title || '').replace(/</g,'&lt;');
+  const sub = (b.subtitle || '').replace(/</g,'&lt;');
+  const cta = (b.cta || '').replace(/</g,'&lt;');
+  switch (b.type) {
+    case 'header':
+      return `<div class="blk blk-header"><div class="ic">◆</div><div><b>${t}</b><div class="muted">${sub}</div></div></div>`;
+    case 'hero':
+      return `<div class="blk blk-hero"><h2>${t}</h2><p>${sub}</p>${cta?`<span class="cta">${cta}</span>`:''}</div>`;
+    case 'grid':
+      return `<div class="blk"><b>${t||'گالری'}</b><div class="blk-grid"><div class="card">۱</div><div class="card">۲</div><div class="card">۳</div><div class="card">۴</div></div></div>`;
+    case 'pricing':
+      return `<div class="blk"><b>${t||'پلن‌ها'}</b><div class="blk-pricing"><div class="plan">پایه</div><div class="plan hi">ویژه</div></div></div>`;
+    case 'cta':
+      return `<div class="blk blk-hero"><h2 style="font-size:16px">${t}</h2>${cta?`<span class="cta">${cta}</span>`:''}</div>`;
+    case 'list':
+      return `<div class="blk"><b>${t}</b><div class="muted" style="margin-top:8px">• مورد نمونه ۱<br>• مورد نمونه ۲<br>• مورد نمونه ۳</div></div>`;
+    case 'faq':
+      return `<div class="blk"><b>${t||'سوالات'}</b><div class="muted" style="margin-top:8px">سوال ۱ — پاسخ کوتاه<br>سوال ۲ — پاسخ کوتاه</div></div>`;
+    case 'testimonial':
+      return `<div class="blk"><b>${t||'نظر مشتری'}</b><p class="muted" style="margin-top:6px">«${sub||'عالی بود'}»</p></div>`;
+    case 'counter':
+      return `<div class="blk"><b>${t||'آمار'}</b><div class="blk-grid" style="margin-top:8px"><div class="card"><b>+۱۲۰</b><div class="muted">مشتری</div></div><div class="card"><b>۴.۹</b><div class="muted">امتیاز</div></div></div></div>`;
+    case 'footer':
+      return `<div class="blk blk-footer">${t}</div>`;
+    default:
+      return `<div class="blk"><b>${t}</b><p class="muted">${sub}</p></div>`;
+  }
+}
+
+let pvIndex = 0;
+function openFullPreview() {
+  pages[currentPageId].blocks = blocks;
+  pvIndex = Math.max(0, currentPageIndex());
+  const fs = document.getElementById('previewFullscreen');
+  fs.classList.add('open');
+  fs.setAttribute('aria-hidden', 'false');
+  renderFullPreviewPage();
+}
+function closeFullPreview() {
+  const fs = document.getElementById('previewFullscreen');
+  fs.classList.remove('open');
+  fs.setAttribute('aria-hidden', 'true');
+}
+function renderFullPreviewPage() {
+  const ids = pageIds();
+  if (!ids.length) return;
+  if (pvIndex < 0) pvIndex = ids.length - 1;
+  if (pvIndex >= ids.length) pvIndex = 0;
+  const pid = ids[pvIndex];
+  const page = pages[pid] || { blocks: [] };
+  const name = page.name || pid;
+  document.getElementById('pvPageLabel').textContent = (pvIndex + 1) + ' / ' + ids.length + ' — ' + name;
+  const stage = document.getElementById('previewStage');
+  const htmlBlocks = (page.blocks || []).map(renderPreviewBlock).join('');
+  stage.innerHTML = `<div class="pv-page">${htmlBlocks || '<div class="blk muted">این صفحه خالی است</div>'}</div>`;
+  stage.scrollTop = 0;
+}
+document.getElementById('btnFullPreview')?.addEventListener('click', openFullPreview);
+document.getElementById('pvClose')?.addEventListener('click', closeFullPreview);
+document.getElementById('pvPrev')?.addEventListener('click', () => { pvIndex--; renderFullPreviewPage(); });
+document.getElementById('pvNext')?.addEventListener('click', () => { pvIndex++; renderFullPreviewPage(); });
+document.addEventListener('keydown', (e) => {
+  const open = document.getElementById('previewFullscreen')?.classList.contains('open');
+  if (!open) return;
+  if (e.key === 'Escape') closeFullPreview();
+  if (e.key === 'ArrowLeft') { pvIndex++; renderFullPreviewPage(); }
+  if (e.key === 'ArrowRight') { pvIndex--; renderFullPreviewPage(); }
+});
+
+/* بهبود بارگذاری قالب — همه صفحات + نام */
 async function loadTemplateFromQuery() {
   const id = new URLSearchParams(window.location.search).get('template');
   if (!id) return;
   try {
     const res = await fetch('/api/templates/' + encodeURIComponent(id));
-    if (!res.ok) return;
+    if (!res.ok) throw new Error('قالب یافت نشد');
     const data = await res.json();
     const t = data.template;
     if (!t || !t.pages) return;
-    if (t.theme) document.body.setAttribute('data-theme', t.theme);
+    if (t.theme) {
+      document.body.setAttribute('data-theme', t.theme);
+      if (typeof currentTheme !== 'undefined') currentTheme = t.theme;
+    }
+    if (t.name && document.getElementById('projName')) {
+      document.getElementById('projName').value = t.name;
+    }
     pages = {};
-    Object.keys(t.pages).forEach(pid => {
-      pages[pid] = { blocks: (t.pages[pid].blocks || []).map(b => ({ ...b })) };
+    Object.keys(t.pages).forEach((pid) => {
+      const pg = t.pages[pid];
+      pages[pid] = {
+        name: pg.name || pid,
+        blocks: (pg.blocks || []).map((b) => ({ ...b })),
+      };
     });
     const first = Object.keys(pages)[0] || 'home';
     currentPageId = first;
-    blocks = pages[currentPageId].blocks;
+    blocks = pages[first].blocks;
     selectedId = blocks[0] ? blocks[0].id : null;
+    const allIds = Object.values(pages).flatMap((pg) => (pg.blocks || []).map((b) => b.id));
+    if (allIds.length && typeof idCounter !== 'undefined') idCounter = Math.max(...allIds, idCounter) + 1;
+    if (typeof renderPageTabs === 'function') renderPageTabs();
     if (typeof renderAll === 'function') renderAll();
-    if (typeof renderPages === 'function') renderPages();
-    console.log('قالب بارگذاری شد:', t.name);
+    updatePageNavLabel();
+    console.log('قالب بارگذاری شد:', t.name, Object.keys(pages).length, 'صفحه');
   } catch (e) {
-    console.warn('بارگذاری قالب ناموفق', e);
+    console.warn('بارگذاری قالب:', e);
   }
 }
-
-
-/* انتشار واقعی روی سرور */
-async function publishToServer() {
-  const token = localStorage.getItem('token') || localStorage.getItem('jarchiya_token');
-  if (!token) {
-    alert('برای انتشار پایدار باید وارد حساب شوی.');
-    window.location.href = '/login';
-    return;
-  }
-  pages[currentPageId].blocks = blocks;
-  const title = (document.getElementById('projName') && document.getElementById('projName').value) || 'برنامک جارچیا';
-  const theme = document.body.getAttribute('data-theme') || 'violet';
-  try {
-    const res = await fetch('/api/publish', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token },
-      body: JSON.stringify({ title, theme, pages, projectId: window.currentProjectId || null })
-    });
-    const data = await res.json();
-    if (!res.ok) throw new Error(data.error || 'خطا در انتشار');
-    alert('منتشر شد!\nلینک: ' + location.origin + data.url);
-    window.open(data.url, '_blank');
-  } catch (e) {
-    alert('انتشار ناموفق: ' + e.message);
-  }
-}
-
-document.getElementById('btnPublishLive')?.addEventListener('click', publishToServer);
-
-
-/* —— صفحات نامحدود —— */
-function addCustomPage() {
-  pages[currentPageId].blocks = blocks;
-  const n = Object.keys(pages).filter(k => k.startsWith('page-')).length + 1;
-  const pid = 'page-' + Date.now().toString(36);
-  const name = prompt('نام صفحه جدید:', 'صفحه ' + n);
-  if (name === null) return;
-  pages[pid] = {
-    name: (name || ('صفحه ' + n)).trim(),
-    blocks: [
-      { id: freshId(), type: 'header', title: name || 'صفحه جدید', subtitle: '' },
-      { id: freshId(), type: 'hero', title: 'عنوان این صفحه', subtitle: 'توضیح کوتاه', cta: 'اقدام' },
-      { id: freshId(), type: 'footer', title: '© جارچیا' },
-    ]
-  };
-  currentPageId = pid;
-  blocks = pages[pid].blocks;
-  selectedId = blocks[0] ? blocks[0].id : null;
-  renderPageTabs();
-  renderAll();
-}
-function deletePage(pid) {
-  if (Object.keys(pages).length <= 1) { alert('حداقل یک صفحه باید بماند.'); return; }
-  if (!confirm('این صفحه حذف شود؟')) return;
-  delete pages[pid];
-  if (currentPageId === pid) {
-    currentPageId = Object.keys(pages)[0];
-    blocks = pages[currentPageId].blocks;
-    selectedId = blocks[0] ? blocks[0].id : null;
-  }
-  renderPageTabs();
-  renderAll();
-}
-function renderPageTabs() {
-  const el = document.getElementById('pageTabs');
-  if (!el) return;
-  el.innerHTML = '';
-  Object.keys(pages).forEach(pid => {
-    const def = PAGE_DEFS.find(p => p.id === pid);
-    const label = (pages[pid].name) || (def ? def.icon + ' ' + def.name : pid);
-    const btn = document.createElement('button');
-    btn.type = 'button';
-    btn.className = 'page-tab' + (pid === currentPageId ? ' active' : '');
-    btn.innerHTML = '<span>' + label + '</span>' + (Object.keys(pages).length > 1 ? '<span class="x" title="حذف">✕</span>' : '');
-    btn.addEventListener('click', (e) => {
-      if (e.target.classList.contains('x')) { e.stopPropagation(); deletePage(pid); return; }
-      pages[currentPageId].blocks = blocks;
-      currentPageId = pid;
-      ensurePage(pid);
-      blocks = pages[pid].blocks;
-      selectedId = blocks[0] ? blocks[0].id : null;
-      renderPageTabs();
-      renderAll();
-    });
-    el.appendChild(btn);
-  });
-  const add = document.createElement('button');
-  add.type = 'button';
-  add.className = 'page-add-btn';
-  add.textContent = '+ صفحه جدید';
-  add.onclick = addCustomPage;
-  el.appendChild(add);
-}
-document.getElementById('btnMobAddPage')?.addEventListener('click', addCustomPage);
-document.getElementById('btnMobBlocks')?.addEventListener('click', () => {
-  document.getElementById('panelLeft')?.classList.toggle('mobile-open');
-  document.getElementById('propPanel')?.classList.remove('mobile-open');
-});
-document.getElementById('btnMobProps')?.addEventListener('click', () => {
-  document.getElementById('propPanel')?.classList.toggle('mobile-open');
-  document.getElementById('panelLeft')?.classList.remove('mobile-open');
-});
 
 </script>
+
+<div class="preview-fullscreen" id="previewFullscreen" aria-hidden="true">
+  <div class="preview-bar">
+    <span class="pv-title">پیش‌نمایش کامل</span>
+    <button type="button" id="pvPrev">‹ قبلی</button>
+    <span class="pv-page-label" id="pvPageLabel">—</span>
+    <button type="button" id="pvNext">بعدی ›</button>
+    <button type="button" id="pvClose">بستن ✕</button>
+  </div>
+  <div class="preview-stage" id="previewStage"></div>
+</div>
 </body>
 </html>
