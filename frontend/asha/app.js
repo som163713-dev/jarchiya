@@ -295,15 +295,77 @@ function showChatUI() {
     document.getElementById('messages').classList.remove('hidden');
 }
 
+
+/* انیمیشن عنوان + دکمه‌های صفحه خالی */
+const HERO_FULL = 'چی می‌خوای برات انجام بدم؟';
+const HERO_GRAD_START = 10; // index of برات انجام in plain text without tags - we'll build manually
+let heroAnimTimer = null;
+
+function resetHeroAnimState() {
+  const h = document.querySelector('#empty-state .hero-title');
+  const pills = document.querySelector('#empty-state .feature-pills');
+  if (pills) pills.classList.remove('pills-in');
+  if (h) h.innerHTML = '';
+  if (heroAnimTimer) { clearTimeout(heroAnimTimer); heroAnimTimer = null; }
+}
+
+function playHeroEntrance() {
+  const h = document.querySelector('#empty-state .hero-title');
+  const pills = document.querySelector('#empty-state .feature-pills');
+  if (!h) return;
+  resetHeroAnimState();
+  // متن: «چی می‌خوای » + گرادیان «برات انجام» + « بدم؟»
+  const parts = [
+    { t: 'چی می‌خوای ', g: false },
+    { t: 'برات انجام', g: true },
+    { t: ' بدم؟', g: false },
+  ];
+  let partIdx = 0;
+  let charIdx = 0;
+  h.classList.add('is-typing');
+  h.innerHTML = '<span class="typed-cursor"></span>';
+
+  function tick() {
+    if (partIdx >= parts.length) {
+      const cur = h.querySelector('.typed-cursor');
+      if (cur) setTimeout(() => cur.remove(), 400);
+      if (pills) {
+        pills.classList.remove('pills-in');
+        void pills.offsetWidth;
+        pills.classList.add('pills-in');
+      }
+      return;
+    }
+    const p = parts[partIdx];
+    if (charIdx === 0) {
+      const span = document.createElement('span');
+      if (p.g) span.className = 'grad-part';
+      span.dataset.role = 'chunk';
+      h.insertBefore(span, h.querySelector('.typed-cursor'));
+    }
+    const spans = h.querySelectorAll('[data-role="chunk"]');
+    const curSpan = spans[spans.length - 1];
+    curSpan.textContent = p.t.slice(0, charIdx + 1);
+    charIdx++;
+    if (charIdx >= p.t.length) {
+      partIdx++;
+      charIdx = 0;
+    }
+    heroAnimTimer = setTimeout(tick, p.g ? 42 : 36);
+  }
+  tick();
+}
+
 function goHome() {
     history = [];
     category = 'general';
     document.getElementById('messages').innerHTML = '';
     document.getElementById('messages').classList.add('hidden');
     document.getElementById('empty-state').classList.remove('hidden');
-    closeAllOverlays();
+    playHeroEntrance();
     try { window.Eitaa?.WebApp?.BackButton?.hide(); } catch (e) {}
 }
+
 
 function selectCategory(cat, title) {
     category = cat;
@@ -506,4 +568,9 @@ document.addEventListener('click', (e) => {
     if (authBd && e.target.id === 'auth-backdrop') {
         closeAuth();
     }
+});
+
+window.addEventListener('DOMContentLoaded', () => {
+  const es = document.getElementById('empty-state');
+  if (es && !es.classList.contains('hidden')) playHeroEntrance();
 });
