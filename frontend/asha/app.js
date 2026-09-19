@@ -70,6 +70,10 @@ function setMode(mode) {
     }
 }
 
+function goJarchiyaHome() {
+    window.location.href = '/';
+}
+
 function applySavedMode() {
     const saved = localStorage.getItem('asha-mode') || 'light';
     setMode(saved);
