@@ -99,8 +99,8 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;color:inhe
 .banner-x{opacity:.65;font-size:18px}
 
 .workspace{flex:1;overflow-y:auto;padding:8px 20px;-webkit-overflow-scrolling:touch}
-.empty-state{min-height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:24px 12px 48px}
-.hero-title{font-size:30px;font-weight:800;margin-bottom:22px;letter-spacing:-.03em}
+.empty-state{min-height:100%;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;text-align:center;padding:clamp(48px,12vh,100px) 12px 48px}
+.hero-title{font-size:32px;font-weight:800;margin-bottom:16px;letter-spacing:-.03em;min-height:1.35em}
 .feature-pills{display:flex;flex-wrap:wrap;justify-content:center;gap:8px;max-width:520px}
 .fpill{
   display:inline-flex;align-items:center;gap:6px;padding:8.5px 14px;border-radius:999px;
@@ -731,7 +731,7 @@ body.rail-collapsed #rail-arrow{transform:rotate(180deg)}
   .right-rail{display:none}
   .rail-open-btn{display:none}
   .top-tools .t-tool,.top-tools .tools-divider{display:none}
-  .hero-title{font-size:24px}
+  .hero-title{font-size:26px}
   .side-panel{right:8px;left:8px;width:auto;top:8px;bottom:8px}
   .panel-card{width:100%}
   .panel-close{display:none}
@@ -1272,3 +1272,83 @@ html[data-mode="dark"] .fpill:hover{
   border-color: rgba(169,156,255,.55) !important;
 }
 html[data-mode="dark"] .fpill span{ filter: none; }
+
+
+/* —— جایگاه بالاتر + سایز + انیمیشن ورود —— */
+.empty-state{
+  justify-content: flex-start !important;
+  padding-top: clamp(40px, 10vh, 88px) !important;
+  padding-bottom: 40px;
+}
+.hero-title{
+  font-size: 32px !important;
+  font-weight: 800;
+  margin-bottom: 14px !important;
+  letter-spacing: -0.03em;
+  line-height: 1.4;
+  min-height: 1.4em;
+}
+@media (max-width: 600px){
+  .hero-title{ font-size: 26px !important; }
+  .empty-state{ padding-top: 36px !important; }
+}
+.hero-title .typed-cursor{
+  display: inline-block;
+  width: 2px;
+  height: 0.9em;
+  margin-right: 2px;
+  vertical-align: -0.1em;
+  background: linear-gradient(180deg, #A99CFF, #FF7CC0);
+  animation: blink-c .8s step-end infinite;
+}
+@keyframes blink-c{ 50%{ opacity:0 } }
+
+.feature-pills{
+  gap: 8px !important;
+  max-width: 480px !important;
+}
+.fpill{
+  padding: 7px 12px !important;
+  font-size: 12px !important;
+  gap: 5px !important;
+  border-radius: 999px;
+}
+.fpill span{ font-size: 13px !important; }
+
+/* ورود نرم */
+.hero-title.is-typing{ opacity: 1; }
+.feature-pills .fpill{
+  opacity: 0;
+  transform: translateY(12px) scale(.96);
+}
+.feature-pills.pills-in .fpill{
+  animation: pillIn .45s cubic-bezier(.22,1,.36,1) forwards;
+}
+.feature-pills.pills-in .fpill:nth-child(1){ animation-delay: .04s }
+.feature-pills.pills-in .fpill:nth-child(2){ animation-delay: .1s }
+.feature-pills.pills-in .fpill:nth-child(3){ animation-delay: .16s }
+.feature-pills.pills-in .fpill:nth-child(4){ animation-delay: .22s }
+.feature-pills.pills-in .fpill:nth-child(5){ animation-delay: .28s }
+.feature-pills.pills-in .fpill:nth-child(6){ animation-delay: .34s }
+@keyframes pillIn{
+  to{ opacity:1; transform: translateY(0) scale(1); }
+}
+
+/* تم تیره آشا نزدیک‌تر به مش جارچیا */
+html[data-mode="dark"] body{
+  background:
+    radial-gradient(44vw 44vw at 94% -8%, rgba(139,124,255,.42) 0%, transparent 70%),
+    radial-gradient(38vw 38vw at 0% 100%, rgba(255,124,192,.38) 0%, transparent 70%),
+    radial-gradient(30vw 30vw at 48% 42%, rgba(111,240,199,.14) 0%, transparent 70%),
+    #0A0A16 !important;
+}
+html[data-mode="dark"] .hero-title{
+  color: #F3F1FB !important;
+}
+html[data-mode="dark"] .hero-title em,
+html[data-mode="dark"] .hero-title .grad-part{
+  background: linear-gradient(115deg, #B8AEFF 0%, #FF9AD0 42%, #7AF0C9 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
