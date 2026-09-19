@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="fa" dir="rtl">
+<html lang="fa" dir="rtl" data-mode="dark">
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -28,6 +28,85 @@ line-height:1.7;
 }
 ::selection{background:var(--v);color:#0A0A16;}
 a{color:inherit;text-decoration:none;}
+
+/* تم روشن = پالت روشن آشا */
+html[data-mode="light"] {
+  --bg: #FBF6F1;
+  --ink: #1C1917;
+  --muted: #8A8279;
+  --v: #8B7CFF;
+  --p: #E85A9A;
+  --m: #0D9F7A;
+  --gold: #E8A83A;
+  --line: rgba(28,25,23,.09);
+  --glass: rgba(255,255,255,.72);
+}
+html[data-mode="light"] body {
+  background:
+    radial-gradient(1000px 480px at 70% -10%, #FFE9DE 0%, transparent 55%),
+    radial-gradient(700px 400px at 0% 20%, #FFF6ED 0%, transparent 50%),
+    var(--bg);
+  color: var(--ink);
+}
+html[data-mode="light"] nav {
+  background: rgba(251,246,241,.82);
+  border-bottom-color: var(--line);
+}
+html[data-mode="light"] .btn-ghost {
+  background: rgba(255,255,255,.7);
+  border-color: var(--line);
+  color: var(--ink);
+}
+html[data-mode="light"] .btn-ghost:hover {
+  border-color: var(--v);
+}
+html[data-mode="light"] .mesh span { opacity: .22; }
+html[data-mode="light"] .wordmark,
+html[data-mode="light"] .brand-name-lat { color: var(--ink); }
+html[data-mode="light"] .hero h1 { color: var(--ink); }
+html[data-mode="light"] .hero .lead { color: var(--muted); }
+html[data-mode="light"] .trust-item b { color: var(--ink); }
+html[data-mode="light"] .trust-item span { color: var(--muted); }
+html[data-mode="light"] footer {
+  border-top-color: var(--line);
+  color: var(--muted);
+}
+html[data-mode="light"] .theme-toggle {
+  background: rgba(255,255,255,.85);
+  border-color: var(--line);
+  color: var(--ink);
+}
+html[data-mode="dark"] .theme-toggle {
+  background: var(--glass);
+  border-color: var(--line);
+  color: var(--ink);
+}
+
+.theme-toggle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 42px;
+  height: 42px;
+  border-radius: 12px;
+  border: 1px solid var(--line);
+  background: var(--glass);
+  color: var(--ink);
+  cursor: pointer;
+  font-size: 18px;
+  transition: transform .15s, background .15s, border-color .15s;
+  flex-shrink: 0;
+}
+.theme-toggle:hover {
+  transform: translateY(-1px);
+  border-color: var(--v);
+}
+.nav-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
 .container{max-width:1180px;margin:0 auto;padding:0 28px;}
 
 .eyebrow{
@@ -407,6 +486,7 @@ padding:36px 0;color:var(--muted);font-size:13px;
     max-width: 100%;
     margin: 0;
     padding: 0;
+    position: relative;
 }
 
 .robots-header {
@@ -815,9 +895,9 @@ padding:36px 0;color:var(--muted);font-size:13px;
 }
 
 .settings-btn {
-    position: fixed;
-    top: 80px; left: 16px;
-    z-index: 1001;
+    position: absolute;
+    top: 16px; left: 16px;
+    z-index: 20;
     width: 42px; height: 42px;
     border: none; border-radius: 50%;
     background: rgba(139,124,255,0.08);
@@ -1046,7 +1126,7 @@ padding:36px 0;color:var(--muted);font-size:13px;
     .photo-title { font-size: 0.55rem; bottom: 8px; }
     .action-btn { font-size: 0.44rem; padding: 4px 2px; }
     .control-btn { width: 38px; height: 38px; font-size: 0.9rem; }
-    .settings-btn { width: 38px; height: 38px; top: 75px; left: 12px; }
+    .settings-btn { width: 38px; height: 38px; top: 12px; left: 12px; }
     .settings-panel { max-width: 100%; }
     .top-notification { top: 72px; font-size: 0.68rem; }
     .filter-btn { font-size: 0.7rem; padding: 6px 14px; }
@@ -1069,6 +1149,44 @@ padding:36px 0;color:var(--muted);font-size:13px;
         transition-duration: 0.01ms !important;
     }
 }
+
+html[data-mode="light"] .settings-panel {
+  background: linear-gradient(160deg, #FFFDFB, #FBF6F1);
+  border-right: 1px solid rgba(28,25,23,.1);
+  color: #1C1917;
+  box-shadow: 5px 0 40px rgba(28,25,23,.08);
+}
+html[data-mode="light"] .settings-section h3,
+html[data-mode="light"] .settings-title { color: #1C1917; }
+html[data-mode="light"] .settings-section label { color: #8A8279; }
+html[data-mode="light"] .settings-section select,
+html[data-mode="light"] .settings-section textarea {
+  background: #fff;
+  border-color: #EFE6DC;
+  color: #1C1917;
+}
+html[data-mode="light"] .settings-btn {
+  background: rgba(255,255,255,.9);
+  border-color: rgba(28,25,23,.12);
+  color: #1C1917;
+}
+
+
+html[data-mode="light"] .feat-card {
+  background: rgba(255,255,255,.75);
+  border-color: rgba(28,25,23,.08);
+}
+html[data-mode="light"] .final-cta {
+  background: linear-gradient(145deg, rgba(139,124,255,.1), rgba(255,122,84,.06));
+  border-color: rgba(28,25,23,.08);
+}
+html[data-mode="light"] .car-btn {
+  background: rgba(255,255,255,.9);
+  color: #1C1917;
+  border-color: rgba(28,25,23,.1);
+}
+html[data-mode="light"] ::selection { background: var(--v); color: #fff; }
+
 </style>
 </head>
 <body>
@@ -1090,7 +1208,10 @@ padding:36px 0;color:var(--muted);font-size:13px;
 <a href="/ai">دستیار آشا</a>
 <a href="/pricing">قیمت‌گذاری</a>
 </div>
+<div class="nav-actions">
+<button type="button" class="theme-toggle" id="theme-toggle" onclick="toggleSiteTheme()" title="تغییر تم روشن/تیره" aria-label="تم">☾</button>
 <a href="/login" class="btn btn-gold" style="padding:10px 20px;font-size:13.5px;">شروع کن</a>
+</div>
 </div>
 </nav>
 
@@ -1298,6 +1419,24 @@ padding:36px 0;color:var(--muted);font-size:13px;
 /* ==========================================================
    بخش ۱: اسکریپت‌های جارچیا
    ========================================================== */
+
+
+/* تم روشن/تیره سایت جارچیا */
+function applySiteTheme(mode) {
+  const m = mode === 'light' ? 'light' : 'dark';
+  document.documentElement.setAttribute('data-mode', m);
+  localStorage.setItem('jarchiya-mode', m);
+  const btn = document.getElementById('theme-toggle');
+  if (btn) btn.textContent = m === 'light' ? '☾' : '☀';
+}
+function toggleSiteTheme() {
+  const cur = document.documentElement.getAttribute('data-mode') || 'dark';
+  applySiteTheme(cur === 'light' ? 'dark' : 'light');
+}
+(function initSiteTheme() {
+  const saved = localStorage.getItem('jarchiya-mode') || 'dark';
+  applySiteTheme(saved);
+})();
 
 const meshEl = document.getElementById('mesh');
 document.addEventListener('mousemove', e => {
