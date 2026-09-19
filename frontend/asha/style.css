@@ -233,14 +233,18 @@ body.rail-collapsed #rail-arrow{transform:rotate(180deg)}
 
 .side-panel{
   position:fixed;
-  top:12px;right:12px;bottom:12px;
+  /* کوتاه‌تر: فاصله بیشتر از بالا و پایین تا صفحه پشت دیده شود */
+  top: max(72px, calc(var(--safe-t) + 64px));
+  right: 14px;
+  bottom: max(88px, calc(var(--safe-b) + 72px));
   left:auto;
   width:54px;
   z-index:50;
   overflow:hidden;
   opacity:0;
   transition:width .42s var(--ease),
-             opacity .3s ease;
+             opacity .3s ease,
+             box-shadow .3s ease;
   pointer-events:none;
 }
 .side-panel.open{
@@ -254,8 +258,8 @@ body.rail-collapsed #rail-arrow{transform:rotate(180deg)}
   top:0;right:0;
   width:var(--panel);height:100%;
   background:linear-gradient(to top, var(--soft) 0%, #FFFDFB 55%, #ffffff 100%);
-  border:1px solid rgba(255,255,255,.9);border-radius:24px;
-  box-shadow:0 20px 60px rgba(28,25,23,.12);
+  border:1px solid rgba(255,255,255,.9);border-radius:22px;
+  box-shadow:0 16px 48px rgba(28,25,23,.14), 0 0 0 1px rgba(255,255,255,.06);
   display:flex;flex-direction:column;overflow:hidden;
   transition:background .3s ease;
 }
@@ -732,7 +736,11 @@ body.rail-collapsed #rail-arrow{transform:rotate(180deg)}
   .rail-open-btn{display:none}
   .top-tools .t-tool,.top-tools .tools-divider{display:none}
   .hero-title{font-size:26px}
-  .side-panel{right:8px;left:8px;width:auto;top:8px;bottom:8px}
+  .side-panel{
+    right:10px;left:10px;width:auto;
+    top:max(60px, calc(var(--safe-t) + 52px));
+    bottom:max(76px, calc(var(--safe-b) + 64px));
+  }
   .panel-card{width:100%}
   .panel-close{display:none}
   .avatar-menu{left:8px;right:8px;width:auto;max-width:none;top:64px}
