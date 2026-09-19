@@ -34,19 +34,19 @@ html[data-mode="light"] {
   --bg: #FBF6F1;
   --ink: #1C1917;
   --muted: #8A8279;
-  --v: #8B7CFF;
+  --v: #FF7A54;
   --p: #E85A9A;
   --m: #0D9F7A;
   --gold: #E8A83A;
-  --line: rgba(28,25,23,.09);
-  --glass: rgba(255,255,255,.72);
+  --line: #EFE6DC;
+  --glass: rgba(255,255,255,.85);
 }
 html[data-mode="light"] body {
   background:
     radial-gradient(1000px 480px at 70% -10%, #FFE9DE 0%, transparent 55%),
     radial-gradient(700px 400px at 0% 20%, #FFF6ED 0%, transparent 50%),
-    var(--bg);
-  color: var(--ink);
+    #FBF6F1 !important;
+  color: #1C1917;
 }
 html[data-mode="light"] nav {
   background: rgba(251,246,241,.82);
@@ -894,25 +894,50 @@ padding:36px 0;color:var(--muted);font-size:13px;
     100% { opacity: 0; transform: translateX(-50%) translateY(-20px); }
 }
 
-.settings-btn {
-    position: absolute;
-    top: 16px; left: 16px;
-    z-index: 20;
-    width: 42px; height: 42px;
-    border: none; border-radius: 50%;
-    background: rgba(139,124,255,0.08);
+.robots-header-top {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+    flex-wrap: wrap;
+    margin-bottom: 8px;
+}
+.settings-btn,
+.settings-btn-inline {
+    position: static;
+    top: auto; left: auto;
+    z-index: 5;
+    width: auto;
+    height: auto;
+    min-height: 40px;
+    padding: 8px 16px;
+    border: none;
+    border-radius: 12px;
+    background: rgba(139,124,255,0.12);
     color: var(--ink);
-    font-size: 1.1rem;
+    font-size: 13px;
+    font-weight: 600;
+    font-family: inherit;
     cursor: pointer;
-    transition: all 0.3s ease;
-    border: 1px solid rgba(139,124,255,0.2);
-    display: flex; align-items: center; justify-content: center;
+    transition: all 0.25s ease;
+    border: 1px solid rgba(139,124,255,0.28);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
     backdrop-filter: blur(8px);
 }
-.settings-btn:hover {
-    background: rgba(139,124,255,0.2);
-    transform: rotate(90deg);
-    box-shadow: 0 0 20px rgba(139,124,255,0.2);
+.settings-btn:hover,
+.settings-btn-inline:hover {
+    background: rgba(139,124,255,0.22);
+    transform: none;
+    box-shadow: 0 4px 16px rgba(139,124,255,0.2);
+}
+html[data-mode="light"] .settings-btn,
+html[data-mode="light"] .settings-btn-inline {
+    background: rgba(255,255,255,.9);
+    border-color: rgba(28,25,23,.12);
+    color: #1C1917;
 }
 
 .settings-panel {
@@ -1126,7 +1151,7 @@ padding:36px 0;color:var(--muted);font-size:13px;
     .photo-title { font-size: 0.55rem; bottom: 8px; }
     .action-btn { font-size: 0.44rem; padding: 4px 2px; }
     .control-btn { width: 38px; height: 38px; font-size: 0.9rem; }
-    .settings-btn { width: 38px; height: 38px; top: 12px; left: 12px; }
+    .settings-btn-inline { font-size: 12px; padding: 6px 12px; }
     .settings-panel { max-width: 100%; }
     .top-notification { top: 72px; font-size: 0.68rem; }
     .filter-btn { font-size: 0.7rem; padding: 6px 14px; }
@@ -1301,7 +1326,10 @@ html[data-mode="light"] ::selection { background: var(--v); color: #fff; }
 <section class="robots-section" id="robots-section">
 
     <div class="robots-header">
-        <div class="eyebrow">🤖 هوش مصنوعی در خدمت کسب‌وکار شما</div>
+        <div class="robots-header-top">
+            <div class="eyebrow">🤖 هوش مصنوعی در خدمت کسب‌وکار شما</div>
+            <button type="button" class="settings-btn settings-btn-inline" onclick="toggleSettings()" title="تنظیمات ربات‌ها">⚙️ تنظیمات ربات‌ها</button>
+        </div>
         <h2>شبکه‌ای از <em>۴۰ ربات هوشمند</em> برای تولید و مدیریت محتوا</h2>
         <p>هر ربات یک تخصص منحصربه‌فرد دارد. روی کارت‌ها کلیک کنید، بکشید، بچرخانید و عملیات مورد نظر را اجرا کنید.</p>
     </div>
@@ -1325,8 +1353,6 @@ html[data-mode="light"] ::selection { background: var(--v); color: #fff; }
         <div class="top-notification" id="top-notification">
             🤖 شبکه تولید محتوای هوش مصنوعی — ۴۰ ربات آنلاین
         </div>
-
-        <button class="settings-btn" onclick="toggleSettings()" title="تنظیمات">⚙️</button>
 
         <div class="settings-panel" id="settings-panel">
             <div class="settings-header">
