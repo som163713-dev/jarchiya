@@ -234,9 +234,9 @@ body.rail-collapsed #rail-arrow{transform:rotate(180deg)}
 .side-panel{
   position:fixed;
   /* کوتاه‌تر: فاصله بیشتر از بالا و پایین تا صفحه پشت دیده شود */
-  top: max(72px, calc(var(--safe-t) + 64px));
+  top: max(18px, calc(var(--safe-t) + 64px));
   right: 14px;
-  bottom: max(88px, calc(var(--safe-b) + 72px));
+  bottom: max(18px, calc(var(--safe-b) + 72px));
   left:auto;
   width:54px;
   z-index:50;
