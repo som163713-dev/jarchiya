@@ -236,7 +236,7 @@ body.rail-collapsed #rail-arrow{transform:rotate(180deg)}
   /* کوتاه‌تر: فاصله بیشتر از بالا و پایین تا صفحه پشت دیده شود */
   top: max(18px, calc(var(--safe-t) + 18px));
   right: 14px;
-  bottom: max(18px, calc(var(--safe-b) + 18px));
+  bottom: max(23px, calc(var(--safe-b) + 23px));
   left:auto;
   width:54px;
   z-index:50;
