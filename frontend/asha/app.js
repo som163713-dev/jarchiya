@@ -39,39 +39,41 @@ function setMode(mode) {
     localStorage.setItem('asha-mode', m);
     document.getElementById('mode-light-btn')?.classList.toggle('active', m === 'light');
     document.getElementById('mode-dark-btn')?.classList.toggle('active', m === 'dark');
+    const root = document.documentElement.style;
     if (m === 'dark') {
-        // پالت جارچیا: بنفش / صورتی / نعنایی
-        const root = document.documentElement.style;
+        // عیناً پالت جارچیا
+        root.setProperty('--bg', '#0A0A16');
+        root.setProperty('--text', '#F3F1FB');
+        root.setProperty('--muted', '#9795B3');
+        root.setProperty('--border', 'rgba(255,255,255,.09)');
+        root.setProperty('--soft', 'rgba(255,255,255,.045)');
         root.setProperty('--orange', '#8B7CFF');
         root.setProperty('--orange2', '#A99CFF');
         root.setProperty('--orange3', '#FF7CC0');
-        root.setProperty('--soft', 'rgba(255,255,255,.045)');
         root.setProperty('--orange-rgb', '139,124,255');
         root.setProperty('--orange2-rgb', '169,156,255');
+        root.setProperty('--grad', 'linear-gradient(135deg, #A99CFF 0%, #8B7CFF 50%, #FF7CC0 100%)');
         document.querySelectorAll('.swatch').forEach(sw => sw.classList.remove('active'));
         document.querySelector('.sw-purple')?.classList.add('active');
         try {
             const WA = window.Eitaa?.WebApp;
-            if (WA) {
-                WA.setHeaderColor('#0A0A16');
-                WA.setBackgroundColor('#0A0A16');
-            }
+            if (WA) { WA.setHeaderColor('#0A0A16'); WA.setBackgroundColor('#0A0A16'); }
         } catch (e) {}
     } else {
+        // تم روشن آشا (پیش‌فرض)
+        root.removeProperty('--bg');
+        root.removeProperty('--text');
+        root.removeProperty('--muted');
+        root.removeProperty('--border');
+        root.removeProperty('--soft');
+        root.removeProperty('--grad');
         const accent = localStorage.getItem('asha-theme') || 'orange';
         setTheme(accent);
         try {
             const WA = window.Eitaa?.WebApp;
-            if (WA) {
-                WA.setHeaderColor('#FF6A3D');
-                WA.setBackgroundColor('#FBF6F1');
-            }
+            if (WA) { WA.setHeaderColor('#FF6A3D'); WA.setBackgroundColor('#FBF6F1'); }
         } catch (e) {}
     }
-}
-
-function goJarchiyaHome() {
-    window.location.href = '/';
 }
 
 function applySavedMode() {
